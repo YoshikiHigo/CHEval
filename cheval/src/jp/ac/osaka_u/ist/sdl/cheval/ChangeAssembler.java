@@ -1,5 +1,7 @@
 package jp.ac.osaka_u.ist.sdl.cheval;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -10,11 +12,24 @@ import java.util.List;
 
 public class ChangeAssembler {
 
+	/**
+	 * 
+	 * @param args
+	 *            第一引数はprevolデータベース，第二引数は類似修正検出のしきい値，第三引数は検出結果出力ファイル
+	 */
 	public static void main(final String[] args) {
+
+		if(3 != args.length){
+			System.err.println("the number of arguments must be 3.");
+		}
+		
+		final String database = args[0];
+		final double threshold = Double.parseDouble(args[1]);
+		final String output = args[2];
 
 		final StringBuilder urlBuilder = new StringBuilder();
 		urlBuilder.append("jdbc:sqlite:");
-		urlBuilder.append(args[0]);
+		urlBuilder.append(database);
 		final String url = urlBuilder.toString();
 
 		final List<Vector> vectors = new ArrayList<Vector>();
@@ -38,12 +53,30 @@ public class ChangeAssembler {
 			e.printStackTrace();
 		}
 
-		for (int i = 0; i < vectors.size(); i++) {
-			for (int j = i + 1; j < vectors.size(); j++) {
-				final double similarity = CosineSimilarity.calculate(
-						vectors.get(i).data, vectors.get(j).data);
-				System.out.println(Double.toString(similarity));
+		try {
+			final BufferedWriter writer = new BufferedWriter(new FileWriter(
+					output));
+			for (int i = 0; i < vectors.size(); i++) {
+				for (int j = i + 1; j < vectors.size(); j++) {
+					final double similarity = CosineSimilarity.calculate(
+							vectors.get(i).data, vectors.get(j).data);
+					if (threshold <= similarity) {
+						writer.write(Long.toString(vectors.get(i).beforeID));
+						writer.write(", ");
+						writer.write(Long.toString(vectors.get(i).afterID));
+						writer.write(", ");
+						writer.write(Long.toString(vectors.get(j).beforeID));
+						writer.write(", ");
+						writer.write(Long.toString(vectors.get(j).afterID));
+						writer.write(", ");
+						writer.write(Double.toString(similarity));
+						writer.newLine();
+					}
+				}
 			}
+			writer.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}
