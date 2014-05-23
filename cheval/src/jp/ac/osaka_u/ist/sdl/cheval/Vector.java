@@ -1,6 +1,7 @@
 package jp.ac.osaka_u.ist.sdl.cheval;
 
 public class Vector {
+
 	public static final int ANNOTATION_TYPE_DECLARATION = 0;
 	public static final int ANNOTATION_TYPE_MEMBER_DECLARATION = 1;
 	public static final int ANONYMOUS_CLASS_DECLARATION = 2;
@@ -86,6 +87,10 @@ public class Vector {
 	public static final int WILDCARD_TYPE = 82;
 	public static final int NUMBER_OF_ELEMENTS = 83;
 
+	public final long beforeID;
+	public final long afterID;
+	public final int[] data;
+
 	public static String toString(final int[] vector) {
 		final StringBuilder builder = new StringBuilder();
 		builder.append("{");
@@ -97,4 +102,11 @@ public class Vector {
 		builder.append("}");
 		return builder.toString();
 	}
+
+	public Vector(final long beforeID, final long afterID, final int[] data) {
+		this.beforeID = beforeID;
+		this.afterID = afterID;
+		this.data = data;
+	}
+
 }

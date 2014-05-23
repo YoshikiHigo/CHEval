@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ChangeAssembler {
 
@@ -16,7 +17,7 @@ public class ChangeAssembler {
 		urlBuilder.append(args[0]);
 		final String url = urlBuilder.toString();
 
-		final ArrayList<int[]> vectors = new ArrayList<int[]>();
+		final List<Vector> vectors = new ArrayList<Vector>();
 		try {
 			Class.forName("org.sqlite.JDBC");
 
@@ -25,7 +26,7 @@ public class ChangeAssembler {
 			final String query = makeSQL();
 			final ResultSet result = statement.executeQuery(query);
 			while (result.next()) {
-				final int[] vector = createVector(result);
+				final Vector vector = createVector(result);
 				if (!isZero(vector)) {
 					vectors.add(vector);
 				}
@@ -40,7 +41,7 @@ public class ChangeAssembler {
 		for (int i = 0; i < vectors.size(); i++) {
 			for (int j = i + 1; j < vectors.size(); j++) {
 				final double similarity = CosineSimilarity.calculate(
-						vectors.get(i), vectors.get(j));
+						vectors.get(i).data, vectors.get(j).data);
 				System.out.println(Double.toString(similarity));
 			}
 		}
@@ -51,6 +52,8 @@ public class ChangeAssembler {
 
 		final StringBuilder text = new StringBuilder();
 		text.append("select ");
+		text.append("v.BEFORE_VECTOR_ID, ");
+		text.append("v.AFTER_VECTOR_ID, ");
 		text.append("(select v1.ANNOTATION_TYPE_DECLARATION from vector v1 where v1.VECTOR_ID = v.AFTER_VECTOR_ID) - (select v2.ANNOTATION_TYPE_DECLARATION from vector v2 where v2.VECTOR_ID = v.BEFORE_VECTOR_ID), ");
 		text.append("(select v1.ANNOTATION_TYPE_MEMBER_DECLARATION from vector v1 where v1.VECTOR_ID = v.AFTER_VECTOR_ID) - (select v2.ANNOTATION_TYPE_MEMBER_DECLARATION from vector v2 where v2.VECTOR_ID = v.BEFORE_VECTOR_ID), ");
 		text.append("(select v1.ANONYMOUS_CLASS_DECLARATION from vector v1 where v1.VECTOR_ID = v.AFTER_VECTOR_ID) - (select v2.ANONYMOUS_CLASS_DECLARATION from vector v2 where v2.VECTOR_ID = v.BEFORE_VECTOR_ID), ");
@@ -138,8 +141,10 @@ public class ChangeAssembler {
 		return text.toString();
 	}
 
-	private static int[] createVector(ResultSet rs) throws SQLException {
+	private static Vector createVector(ResultSet rs) throws SQLException {
 		int column = 0;
+		final long before_vector_ID = rs.getLong(++column);
+		final long after_vector_ID = rs.getLong(++column);
 		final int annotationTypeDeclaration = rs.getInt(++column);
 		final int annotationTypeMemberDeclaration = rs.getInt(++column);
 		final int anonymousClassDeclaration = rs.getInt(++column);
@@ -224,7 +229,7 @@ public class ChangeAssembler {
 		final int whileStatement = rs.getInt(++column);
 		final int wildcardType = rs.getInt(++column);
 
-		final int[] vector = { annotationTypeDeclaration,
+		final int[] data = { annotationTypeDeclaration,
 				annotationTypeMemberDeclaration, anonymousClassDeclaration,
 				arrayAccess, arrayCreation, arrayInitializer, arrayType,
 				assertStatement, assignment, block, blockComment,
@@ -251,11 +256,11 @@ public class ChangeAssembler {
 				typeDeclarationStatement, typeLiteral, typeParameter,
 				variableDeclarationExpression, variableDeclarationFragment,
 				variableDeclarationStatement, whileStatement, wildcardType };
-		return vector;
+		return new Vector(before_vector_ID, after_vector_ID, data);
 	}
 
-	private static boolean isZero(final int[] vector) {
-		for (int element : vector) {
+	private static boolean isZero(final Vector vector) {
+		for (int element : vector.data) {
 			if (0 != element) {
 				return false;
 			}
