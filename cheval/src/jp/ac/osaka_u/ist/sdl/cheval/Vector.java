@@ -109,4 +109,24 @@ public class Vector {
 		this.data = data;
 	}
 
+	@Override
+	public int hashCode() {
+		return (int) (this.beforeID + this.afterID);
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+
+		if (null == o) {
+			return false;
+		}
+
+		if (!(o instanceof Vector)) {
+			return false;
+		}
+
+		final Vector target = (Vector) o;
+		return (this.beforeID == target.beforeID)
+				&& (this.afterID == target.afterID);
+	}
 }
