@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -93,29 +94,32 @@ public class Converter {
 	private static Set<Set<Vector>> getCliques(
 			final Map<Vector, Set<Vector>> vectorData) {
 
-		final Set<Set<Vector>> cliques = new HashSet<Set<Vector>>();
+		final Set<Set<Vector>> allCliques = new HashSet<Set<Vector>>();
 
-		NODE1: for (final Entry<Vector, Set<Vector>> entry : vectorData
-				.entrySet()) {
-
-			final Set<Vector> nodes1 = new HashSet<Vector>();
-			nodes1.add(entry.getKey());
-			nodes1.addAll(entry.getValue());
-
-			NODE2: for (final Vector node : entry.getValue()) {
-				final Set<Vector> nodes2 = new HashSet<Vector>();
-				nodes2.add(node);
-				nodes2.addAll(vectorData.get(node));
-
-				if (!nodes1.equals(nodes2)) {
-					continue NODE1;
-				}
+		// creating size-2 cliques
+		Set<Set<Vector>> cliques = new HashSet<Set<Vector>>();
+		for (final Entry<Vector, Set<Vector>> entry : vectorData.entrySet()) {
+			final Vector node1 = entry.getKey();
+			for (final Vector node2 : entry.getValue()) {
+				final Set<Vector> clique = new HashSet<Vector>();
+				clique.add(node1);
+				clique.add(node2);
+				cliques.add(clique);
 			}
-
-			cliques.add(nodes1);
 		}
 
-		return cliques;
+		while (!cliques.isEmpty()) {
+
+			System.out.println("a");
+
+			final Set<Set<Vector>> largerCliques = new HashSet<Set<Vector>>();
+			getLargerCliques(cliques, largerCliques, vectorData);
+
+			allCliques.addAll(cliques);
+			cliques = largerCliques;
+		}
+
+		return allCliques;
 	}
 
 	private static void writeCliques(final Set<Set<Vector>> cliques,
@@ -143,5 +147,48 @@ public class Converter {
 			e.printStackTrace();
 			System.exit(0);
 		}
+	}
+
+	private static void getLargerCliques(final Set<Set<Vector>> cliques,
+			final Set<Set<Vector>> largerCliques,
+			final Map<Vector, Set<Vector>> vectorData) {
+
+		final Iterator<Set<Vector>> iterator = cliques.iterator();
+		while (iterator.hasNext()) {
+			// System.out.println("b");
+			final Set<Vector> clique = iterator.next();
+			final Set<Set<Vector>> largers = getLargerCliques(clique,
+					vectorData);
+			if (!largers.isEmpty()) {
+				largerCliques.addAll(largers);
+				iterator.remove();
+			}
+		}
+	}
+
+	private static Set<Set<Vector>> getLargerCliques(final Set<Vector> clique,
+			final Map<Vector, Set<Vector>> vectorData) {
+
+		final Set<Set<Vector>> largerCliques = new HashSet<Set<Vector>>();
+
+		for (final Vector node : clique) {
+			// System.out.println("c");
+			Set<Vector> neighbors = vectorData.get(node);
+			neighbors.removeAll(clique);
+
+			for (final Vector neighbor : neighbors) {
+
+				Set<Vector> neighborNeighbors = vectorData.get(neighbor);
+				if (neighborNeighbors.containsAll(clique)) {
+
+					final Set<Vector> largerClique = new HashSet<Vector>();
+					largerClique.addAll(clique);
+					largerClique.add(neighbor);
+					largerCliques.add(largerClique);
+				}
+			}
+		}
+
+		return largerCliques;
 	}
 }
