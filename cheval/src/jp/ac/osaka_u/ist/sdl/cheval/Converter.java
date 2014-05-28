@@ -100,13 +100,16 @@ public class Converter {
 		Set<Set<Vector>> cliques = new HashSet<Set<Vector>>();
 		for (final Entry<Vector, Set<Vector>> entry : vectorData.entrySet()) {
 			final Vector node1 = entry.getKey();
-			for (final Vector node2 : entry.getValue()) {
+			final Set<Vector> neighbors = entry.getValue();
+
+			for (final Vector node2 : neighbors) {
 				final Set<Vector> clique = new HashSet<Vector>();
 				clique.add(node1);
 				clique.add(node2);
 				cliques.add(clique);
 			}
 		}
+		System.out.println(Integer.toString(cliques.size()));
 
 		while (!cliques.isEmpty()) {
 
