@@ -1,6 +1,11 @@
 package jp.ac.osaka_u.ist.sdl.cheval;
 
-public class Vector {
+import java.util.Collections;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class Vector implements Comparable<Vector> {
 
 	public static final int ANNOTATION_TYPE_DECLARATION = 0;
 	public static final int ANNOTATION_TYPE_MEMBER_DECLARATION = 1;
@@ -87,9 +92,14 @@ public class Vector {
 	public static final int WILDCARD_TYPE = 82;
 	public static final int NUMBER_OF_ELEMENTS = 83;
 
-	public final long beforeID;
-	public final long afterID;
+	private static final AtomicInteger IDGENERATOR = new AtomicInteger(0);
+
+	public final int id;
+	public final long beforeMethodID;
+	public final long afterMethodID;
 	public final int[] data;
+
+	private final SortedMap<Vector, Double> similarChanges;
 
 	public static String toString(final int[] vector) {
 		final StringBuilder builder = new StringBuilder();
@@ -103,15 +113,26 @@ public class Vector {
 		return builder.toString();
 	}
 
-	public Vector(final long beforeID, final long afterID, final int[] data) {
-		this.beforeID = beforeID;
-		this.afterID = afterID;
+	public Vector(final long beforeMethodID, final long afterMethodID,
+			final int[] data) {
+		this.id = IDGENERATOR.getAndIncrement();
+		this.beforeMethodID = beforeMethodID;
+		this.afterMethodID = afterMethodID;
 		this.data = data;
+		this.similarChanges = new TreeMap<Vector, Double>();
+	}
+
+	public void addSimilarChange(final Vector change, final double similarity) {
+		this.similarChanges.put(change, similarity);
+	}
+
+	public SortedMap<Vector, Double> getSimilarChanges() {
+		return Collections.unmodifiableSortedMap(this.similarChanges);
 	}
 
 	@Override
 	public int hashCode() {
-		return (int) (this.beforeID + this.afterID);
+		return (int) (this.beforeMethodID + this.afterMethodID);
 	}
 
 	@Override
@@ -126,7 +147,23 @@ public class Vector {
 		}
 
 		final Vector target = (Vector) o;
-		return (this.beforeID == target.beforeID)
-				&& (this.afterID == target.afterID);
+		return (this.beforeMethodID == target.beforeMethodID)
+				&& (this.afterMethodID == target.afterMethodID);
 	}
+
+	@Override
+	public int compareTo(final Vector v) {
+		if (this.beforeMethodID < v.beforeMethodID) {
+			return -1;
+		} else if (this.beforeMethodID > v.beforeMethodID) {
+			return 1;
+		} else if (this.afterMethodID < v.afterMethodID) {
+			return -1;
+		} else if (this.afterMethodID > v.afterMethodID) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
+
 }

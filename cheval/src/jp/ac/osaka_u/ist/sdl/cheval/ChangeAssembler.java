@@ -19,10 +19,10 @@ public class ChangeAssembler {
 	 */
 	public static void main(final String[] args) {
 
-		if(3 != args.length){
+		if (3 != args.length) {
 			System.err.println("the number of arguments must be 3.");
 		}
-		
+
 		final String database = args[0];
 		final double threshold = Double.parseDouble(args[1]);
 		final String output = args[2];
@@ -61,13 +61,13 @@ public class ChangeAssembler {
 					final double similarity = CosineSimilarity.calculate(
 							vectors.get(i).data, vectors.get(j).data);
 					if (threshold <= similarity) {
-						writer.write(Long.toString(vectors.get(i).beforeID));
+						writer.write(Long.toString(vectors.get(i).beforeMethodID));
 						writer.write(", ");
-						writer.write(Long.toString(vectors.get(i).afterID));
+						writer.write(Long.toString(vectors.get(i).afterMethodID));
 						writer.write(", ");
-						writer.write(Long.toString(vectors.get(j).beforeID));
+						writer.write(Long.toString(vectors.get(j).beforeMethodID));
 						writer.write(", ");
-						writer.write(Long.toString(vectors.get(j).afterID));
+						writer.write(Long.toString(vectors.get(j).afterMethodID));
 						writer.write(", ");
 						writer.write(Double.toString(similarity));
 						writer.newLine();
@@ -85,8 +85,8 @@ public class ChangeAssembler {
 
 		final StringBuilder text = new StringBuilder();
 		text.append("select ");
-		text.append("v.BEFORE_VECTOR_ID, ");
-		text.append("v.AFTER_VECTOR_ID, ");
+		text.append("v.BEFORE_METHOD_ID, ");
+		text.append("v.AFTER_METHOD_ID, ");
 		text.append("(select v1.ANNOTATION_TYPE_DECLARATION from vector v1 where v1.VECTOR_ID = v.AFTER_VECTOR_ID) - (select v2.ANNOTATION_TYPE_DECLARATION from vector v2 where v2.VECTOR_ID = v.BEFORE_VECTOR_ID), ");
 		text.append("(select v1.ANNOTATION_TYPE_MEMBER_DECLARATION from vector v1 where v1.VECTOR_ID = v.AFTER_VECTOR_ID) - (select v2.ANNOTATION_TYPE_MEMBER_DECLARATION from vector v2 where v2.VECTOR_ID = v.BEFORE_VECTOR_ID), ");
 		text.append("(select v1.ANONYMOUS_CLASS_DECLARATION from vector v1 where v1.VECTOR_ID = v.AFTER_VECTOR_ID) - (select v2.ANONYMOUS_CLASS_DECLARATION from vector v2 where v2.VECTOR_ID = v.BEFORE_VECTOR_ID), ");
@@ -170,7 +170,7 @@ public class ChangeAssembler {
 		text.append("(select v1.VARIABLE_DECLARATION_STATEMENT from vector v1 where v1.VECTOR_ID = v.AFTER_VECTOR_ID) - (select v2.VARIABLE_DECLARATION_STATEMENT from vector v2 where v2.VECTOR_ID = v.BEFORE_VECTOR_ID), ");
 		text.append("(select v1.WHILE_STATEMENT from vector v1 where v1.VECTOR_ID = v.AFTER_VECTOR_ID) - (select v2.WHILE_STATEMENT from vector v2 where v2.VECTOR_ID = v.BEFORE_VECTOR_ID), ");
 		text.append("(select v1.WILDCARD_TYPE from vector v1 where v1.VECTOR_ID = v.AFTER_VECTOR_ID) - (select v2.WILDCARD_TYPE from vector v2 where v2.VECTOR_ID = v.BEFORE_VECTOR_ID) ");
-		text.append("from vector_link v");
+		text.append("from VECTOR_LINK v");
 		return text.toString();
 	}
 

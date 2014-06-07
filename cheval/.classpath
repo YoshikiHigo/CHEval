@@ -3,5 +3,21 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 	<classpathentry kind="lib" path="lib/sqlite-jdbc-3.8.2/sqlite-jdbc4-3.8.2-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/svnkit-1.8.4/lib/antlr-runtime-3.4.jar"/>
+	<classpathentry kind="lib" path="lib/svnkit-1.8.4/lib/jna-3.5.2.jar"/>
+	<classpathentry kind="lib" path="lib/svnkit-1.8.4/lib/jsch.agentproxy.connector-factory-0.0.7.jar"/>
+	<classpathentry kind="lib" path="lib/svnkit-1.8.4/lib/jsch.agentproxy.core-0.0.7.jar"/>
+	<classpathentry kind="lib" path="lib/svnkit-1.8.4/lib/jsch.agentproxy.pageant-0.0.7.jar"/>
+	<classpathentry kind="lib" path="lib/svnkit-1.8.4/lib/jsch.agentproxy.sshagent-0.0.7.jar"/>
+	<classpathentry kind="lib" path="lib/svnkit-1.8.4/lib/jsch.agentproxy.svnkit-trilead-ssh2-0.0.7.jar"/>
+	<classpathentry kind="lib" path="lib/svnkit-1.8.4/lib/jsch.agentproxy.usocket-jna-0.0.7.jar"/>
+	<classpathentry kind="lib" path="lib/svnkit-1.8.4/lib/jsch.agentproxy.usocket-nc-0.0.7.jar"/>
+	<classpathentry kind="lib" path="lib/svnkit-1.8.4/lib/platform-3.5.2.jar"/>
+	<classpathentry kind="lib" path="lib/svnkit-1.8.4/lib/sequence-library-1.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/svnkit-1.8.4/lib/sqljet-1.1.10.jar"/>
+	<classpathentry kind="lib" path="lib/svnkit-1.8.4/lib/svnkit-1.8.4.jar"/>
+	<classpathentry kind="lib" path="lib/svnkit-1.8.4/lib/svnkit-cli-1.8.4.jar"/>
+	<classpathentry kind="lib" path="lib/svnkit-1.8.4/lib/svnkit-javahl16-1.8.4.jar"/>
+	<classpathentry kind="lib" path="lib/svnkit-1.8.4/lib/trilead-ssh2-1.0.0-build217.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

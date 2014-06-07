@@ -137,9 +137,9 @@ public class Converter {
 					continue;
 				}
 				for (final Vector node : clique) {
-					writer.write(Long.toString(node.beforeID));
+					writer.write(Long.toString(node.beforeMethodID));
 					writer.write(".");
-					writer.write(Long.toString(node.afterID));
+					writer.write(Long.toString(node.afterMethodID));
 					writer.write(",");
 				}
 				writer.newLine();
