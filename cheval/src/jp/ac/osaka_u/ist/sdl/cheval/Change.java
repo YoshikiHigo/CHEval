@@ -130,6 +130,154 @@ public class Change implements Comparable<Change> {
 		return Collections.unmodifiableSortedMap(this.similarChanges);
 	}
 
+	public String getChangedValueString() {
+		final StringBuilder text = new StringBuilder();
+		text.append(this.getChangedValueString(this.data[0],
+				"ANNOTATION_TYPE_DECLARATION"));
+		text.append(this.getChangedValueString(this.data[1],
+				"ANNOTATION_TYPE_MEMBER_DECLARATION"));
+		text.append(this.getChangedValueString(this.data[2],
+				"ANONYMOUS_CLASS_DECLARATION"));
+		text.append(this.getChangedValueString(this.data[3], "ARRAY_ACCESS"));
+		text.append(this.getChangedValueString(this.data[4], "ARRAY_CREATION"));
+		text.append(this.getChangedValueString(this.data[5],
+				"ARRAY_INITIALIZER"));
+		text.append(this.getChangedValueString(this.data[6], "ARRAY_TYPE"));
+		text.append(this
+				.getChangedValueString(this.data[0], "ASSERT_STATEMENT"));
+		text.append(this.getChangedValueString(this.data[7], "ASSIGNMENT"));
+		text.append(this.getChangedValueString(this.data[8], "BLOCK"));
+		text.append(this.getChangedValueString(this.data[9], "BLOCK_COMMENT"));
+		text.append(this
+				.getChangedValueString(this.data[10], "BOOLEAN_LITERAL"));
+		text.append(this
+				.getChangedValueString(this.data[11], "BREAK_STATEMENT"));
+		text.append(this
+				.getChangedValueString(this.data[12], "CAST_EXPRESSION"));
+		text.append(this.getChangedValueString(this.data[13], "CATCH_CLAUSE"));
+		text.append(this.getChangedValueString(this.data[14],
+				"CHARACTER_LITERAL"));
+		text.append(this.getChangedValueString(this.data[15],
+				"CLASS_INSTANCE_CREATION"));
+		text.append(this
+				.getChangedValueString(this.data[0], "COMPILATION_UNIT"));
+		text.append(this.getChangedValueString(this.data[16],
+				"CONDITIONAL_EXPRESSION"));
+		text.append(this.getChangedValueString(this.data[17],
+				"CONSTRUCTOR_INVOCATION"));
+		text.append(this.getChangedValueString(this.data[18],
+				"CONTINUE_STATEMENT"));
+		text.append(this.getChangedValueString(this.data[19], "DO_STATEMENT"));
+		text.append(this
+				.getChangedValueString(this.data[20], "EMPTY_STATEMENT"));
+		text.append(this.getChangedValueString(this.data[21],
+				"ENHANCED_FOR_STATEMENT"));
+		text.append(this.getChangedValueString(this.data[22],
+				"ENUM_CONSTANT_DECLARATION"));
+		text.append(this
+				.getChangedValueString(this.data[0], "ENUM_DECLARATION"));
+		text.append(this.getChangedValueString(this.data[23],
+				"EXPRESSION_STATEMENT"));
+		text.append(this.getChangedValueString(this.data[24], "FIELD_ACCESS"));
+		text.append(this.getChangedValueString(this.data[25],
+				"FIELD_DECLARATION"));
+		text.append(this.getChangedValueString(this.data[26], "FOR_STATEMENT"));
+		text.append(this.getChangedValueString(this.data[27], "IF_STATEMENT"));
+		text.append(this.getChangedValueString(this.data[28],
+				"IMPORT_DECLARATION"));
+		text.append(this
+				.getChangedValueString(this.data[0], "INFIX_EXPRESSION"));
+		text.append(this.getChangedValueString(this.data[29], "INITIALIZER"));
+		text.append(this.getChangedValueString(this.data[30],
+				"INSTANCEOF_EXPRESSION"));
+		text.append(this.getChangedValueString(this.data[31], "JAVADOC"));
+		text.append(this.getChangedValueString(this.data[32],
+				"LABELED_STATEMENT"));
+		text.append(this.getChangedValueString(this.data[33], "LINE_COMMENT"));
+		text.append(this.getChangedValueString(this.data[34],
+				"MARKER_ANNOTATION"));
+		text.append(this.getChangedValueString(this.data[35], "MEMBER_REF"));
+		text.append(this.getChangedValueString(this.data[36],
+				"MEMBER_VALUE_PAIR"));
+		text.append(this.getChangedValueString(this.data[37],
+				"METHOD_DECLARATION"));
+		text.append(this.getChangedValueString(this.data[38],
+				"METHOD_INVOCATION"));
+		text.append(this.getChangedValueString(this.data[39], "METHOD_REF"));
+		text.append(this.getChangedValueString(this.data[40],
+				"METHOD_REF_PARAMETER"));
+		text.append(this.getChangedValueString(this.data[41], "MODIFIER"));
+		text.append(this.getChangedValueString(this.data[42],
+				"NORMAL_ANNOTATION"));
+		text.append(this.getChangedValueString(this.data[43], "NULL_LITERAL"));
+		text.append(this.getChangedValueString(this.data[44], "NUMBER_LITERAL"));
+		text.append(this.getChangedValueString(this.data[45],
+				"PACKAGE_DECLARATION"));
+		text.append(this.getChangedValueString(this.data[46],
+				"PARAMETERIZED_TYPE"));
+		text.append(this.getChangedValueString(this.data[47],
+				"PARENTHESIZED_EXPRESSION"));
+		text.append(this.getChangedValueString(this.data[48],
+				"POSTFIX_EXPRESSION"));
+		text.append(this.getChangedValueString(this.data[49],
+				"PREFIX_EXPRESSION"));
+		text.append(this.getChangedValueString(this.data[50], "PRIMITIVE_TYPE"));
+		text.append(this.getChangedValueString(this.data[51], "QUALIFIED_NAME"));
+		text.append(this.getChangedValueString(this.data[52], "QUALIFIED_TYPE"));
+		text.append(this
+				.getChangedValueString(this.data[0], "RETURN_STATEMENT"));
+		text.append(this.getChangedValueString(this.data[53], "SIMPLE_NAME"));
+		text.append(this.getChangedValueString(this.data[54], "SIMPLE_TYPE"));
+		text.append(this.getChangedValueString(this.data[55],
+				"SINGLE_MEMBER_ANNOTATION"));
+		text.append(this.getChangedValueString(this.data[56],
+				"SINGLE_VARIABLE_DECLARATION"));
+		text.append(this.getChangedValueString(this.data[57], "STRING_LITERAL"));
+		text.append(this.getChangedValueString(this.data[58],
+				"SUPER_CONSTRUCTOR_INVOCATION"));
+		text.append(this.getChangedValueString(this.data[59],
+				"SUPER_FIELD_ACCESS"));
+		text.append(this.getChangedValueString(this.data[60],
+				"SUPER_METHOD_INVOCATION"));
+		text.append(this.getChangedValueString(this.data[61], "SWITCH_CASE"));
+		text.append(this
+				.getChangedValueString(this.data[0], "SWITCH_STATEMENT"));
+		text.append(this.getChangedValueString(this.data[0],
+				"SYNCHRONIZED_STATEMENT"));
+		text.append(this.getChangedValueString(this.data[0], "TAG_ELEMENT"));
+		text.append(this.getChangedValueString(this.data[0], "TEXT_ELEMENT"));
+		text.append(this.getChangedValueString(this.data[0], "THIS_EXPRESSION"));
+		text.append(this.getChangedValueString(this.data[0], "THROW_STATEMENT"));
+		text.append(this.getChangedValueString(this.data[0], "TRY_STATEMENT"));
+		text.append(this
+				.getChangedValueString(this.data[0], "TYPE_DECLARATION"));
+		text.append(this.getChangedValueString(this.data[0],
+				"TYPE_DECLARATION_STATEMENT"));
+		text.append(this.getChangedValueString(this.data[0], "TYPE_LITERAL"));
+		text.append(this.getChangedValueString(this.data[0], "TYPE_PARAMETER"));
+		text.append(this.getChangedValueString(this.data[0],
+				"VARIABLE_DECLARATION_EXPRESSION"));
+		text.append(this.getChangedValueString(this.data[0],
+				"VARIABLE_DECLARATION_FRAGMENT"));
+		text.append(this.getChangedValueString(this.data[0],
+				"VARIABLE_DECLARATION_STATEMENT"));
+		text.append(this.getChangedValueString(this.data[0], "WHILE_STATEMENT"));
+		text.append(this.getChangedValueString(this.data[0], "WILDCARD_TYPE"));
+		text.append(this.getChangedValueString(this.data[0],
+				"NUMBER_OF_ELEMENTS"));
+		return text.toString();
+	}
+
+	public String getChangedValueString(final int value, final String label) {
+		final StringBuilder text = new StringBuilder();
+		if (0 != value) {
+			text.append(label);
+			text.append(Integer.toString(value));
+			text.append(",");
+		}
+		return text.toString();
+	}
+
 	@Override
 	public int hashCode() {
 		return (int) (this.beforeMethodID + this.afterMethodID);
