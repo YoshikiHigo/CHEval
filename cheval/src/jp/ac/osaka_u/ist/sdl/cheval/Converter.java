@@ -26,15 +26,15 @@ public class Converter {
 		final String input = args[0];
 		final String output = args[1];
 
-		List<VectorPair> pairs = readVectorPairs(input);
-		final Map<Vector, Set<Vector>> vectorData = getVectorData(pairs);
-		final Set<Set<Vector>> cliques = getCliques(vectorData);
+		List<ChangePair> pairs = readVectorPairs(input);
+		final Map<Change, Set<Change>> vectorData = getVectorData(pairs);
+		final Set<Set<Change>> cliques = getCliques(vectorData);
 		writeCliques(cliques, output);
 	}
 
-	private static List<VectorPair> readVectorPairs(final String path) {
+	private static List<ChangePair> readVectorPairs(final String path) {
 
-		final List<VectorPair> pairs = new ArrayList<VectorPair>();
+		final List<ChangePair> pairs = new ArrayList<ChangePair>();
 
 		try {
 			final BufferedReader reader = new BufferedReader(new FileReader(
@@ -49,9 +49,9 @@ public class Converter {
 				final String rightAfterID = tokenizer.nextToken();
 				final String similarity = tokenizer.nextToken();
 
-				final VectorPair pair = new VectorPair(new Vector(
+				final ChangePair pair = new ChangePair(new Change(
 						Long.parseLong(leftBeforeID),
-						Long.parseLong(leftAfterID), new int[] {}), new Vector(
+						Long.parseLong(leftAfterID), new int[] {}), new Change(
 						Long.parseLong(rightBeforeID),
 						Long.parseLong(rightAfterID), new int[] {}),
 						Double.parseDouble(similarity));
@@ -67,22 +67,22 @@ public class Converter {
 		return pairs;
 	}
 
-	private static Map<Vector, Set<Vector>> getVectorData(
-			final List<VectorPair> pairs) {
+	private static Map<Change, Set<Change>> getVectorData(
+			final List<ChangePair> pairs) {
 
-		final Map<Vector, Set<Vector>> vectorData = new HashMap<Vector, Set<Vector>>();
+		final Map<Change, Set<Change>> vectorData = new HashMap<Change, Set<Change>>();
 		for (int i = 0; i < pairs.size(); i++) {
 
-			Set<Vector> neighbors = vectorData.get(pairs.get(i).left);
+			Set<Change> neighbors = vectorData.get(pairs.get(i).left);
 			if (null == neighbors) {
-				neighbors = new HashSet<Vector>();
+				neighbors = new HashSet<Change>();
 				vectorData.put(pairs.get(i).left, neighbors);
 			}
 			neighbors.add(pairs.get(i).right);
 
 			neighbors = vectorData.get(pairs.get(i).right);
 			if (null == neighbors) {
-				neighbors = new HashSet<Vector>();
+				neighbors = new HashSet<Change>();
 				vectorData.put(pairs.get(i).right, neighbors);
 			}
 			neighbors.add(pairs.get(i).left);
@@ -91,19 +91,19 @@ public class Converter {
 		return vectorData;
 	}
 
-	private static Set<Set<Vector>> getCliques(
-			final Map<Vector, Set<Vector>> vectorData) {
+	private static Set<Set<Change>> getCliques(
+			final Map<Change, Set<Change>> vectorData) {
 
-		final Set<Set<Vector>> allCliques = new HashSet<Set<Vector>>();
+		final Set<Set<Change>> allCliques = new HashSet<Set<Change>>();
 
 		// creating size-2 cliques
-		Set<Set<Vector>> cliques = new HashSet<Set<Vector>>();
-		for (final Entry<Vector, Set<Vector>> entry : vectorData.entrySet()) {
-			final Vector node1 = entry.getKey();
-			final Set<Vector> neighbors = entry.getValue();
+		Set<Set<Change>> cliques = new HashSet<Set<Change>>();
+		for (final Entry<Change, Set<Change>> entry : vectorData.entrySet()) {
+			final Change node1 = entry.getKey();
+			final Set<Change> neighbors = entry.getValue();
 
-			for (final Vector node2 : neighbors) {
-				final Set<Vector> clique = new HashSet<Vector>();
+			for (final Change node2 : neighbors) {
+				final Set<Change> clique = new HashSet<Change>();
 				clique.add(node1);
 				clique.add(node2);
 				cliques.add(clique);
@@ -115,7 +115,7 @@ public class Converter {
 
 			System.out.println("a");
 
-			final Set<Set<Vector>> largerCliques = new HashSet<Set<Vector>>();
+			final Set<Set<Change>> largerCliques = new HashSet<Set<Change>>();
 			getLargerCliques(cliques, largerCliques, vectorData);
 
 			allCliques.addAll(cliques);
@@ -125,18 +125,18 @@ public class Converter {
 		return allCliques;
 	}
 
-	private static void writeCliques(final Set<Set<Vector>> cliques,
+	private static void writeCliques(final Set<Set<Change>> cliques,
 			final String output) {
 
 		try {
 
 			final BufferedWriter writer = new BufferedWriter(new FileWriter(
 					output));
-			for (final Set<Vector> clique : cliques) {
+			for (final Set<Change> clique : cliques) {
 				if (clique.size() < 3) {
 					continue;
 				}
-				for (final Vector node : clique) {
+				for (final Change node : clique) {
 					writer.write(Long.toString(node.beforeMethodID));
 					writer.write(".");
 					writer.write(Long.toString(node.afterMethodID));
@@ -152,15 +152,15 @@ public class Converter {
 		}
 	}
 
-	private static void getLargerCliques(final Set<Set<Vector>> cliques,
-			final Set<Set<Vector>> largerCliques,
-			final Map<Vector, Set<Vector>> vectorData) {
+	private static void getLargerCliques(final Set<Set<Change>> cliques,
+			final Set<Set<Change>> largerCliques,
+			final Map<Change, Set<Change>> vectorData) {
 
-		final Iterator<Set<Vector>> iterator = cliques.iterator();
+		final Iterator<Set<Change>> iterator = cliques.iterator();
 		while (iterator.hasNext()) {
 			// System.out.println("b");
-			final Set<Vector> clique = iterator.next();
-			final Set<Set<Vector>> largers = getLargerCliques(clique,
+			final Set<Change> clique = iterator.next();
+			final Set<Set<Change>> largers = getLargerCliques(clique,
 					vectorData);
 			if (!largers.isEmpty()) {
 				largerCliques.addAll(largers);
@@ -169,22 +169,22 @@ public class Converter {
 		}
 	}
 
-	private static Set<Set<Vector>> getLargerCliques(final Set<Vector> clique,
-			final Map<Vector, Set<Vector>> vectorData) {
+	private static Set<Set<Change>> getLargerCliques(final Set<Change> clique,
+			final Map<Change, Set<Change>> vectorData) {
 
-		final Set<Set<Vector>> largerCliques = new HashSet<Set<Vector>>();
+		final Set<Set<Change>> largerCliques = new HashSet<Set<Change>>();
 
-		for (final Vector node : clique) {
+		for (final Change node : clique) {
 			// System.out.println("c");
-			Set<Vector> neighbors = vectorData.get(node);
+			Set<Change> neighbors = vectorData.get(node);
 			neighbors.removeAll(clique);
 
-			for (final Vector neighbor : neighbors) {
+			for (final Change neighbor : neighbors) {
 
-				Set<Vector> neighborNeighbors = vectorData.get(neighbor);
+				Set<Change> neighborNeighbors = vectorData.get(neighbor);
 				if (neighborNeighbors.containsAll(clique)) {
 
-					final Set<Vector> largerClique = new HashSet<Vector>();
+					final Set<Change> largerClique = new HashSet<Change>();
 					largerClique.addAll(clique);
 					largerClique.add(neighbor);
 					largerCliques.add(largerClique);

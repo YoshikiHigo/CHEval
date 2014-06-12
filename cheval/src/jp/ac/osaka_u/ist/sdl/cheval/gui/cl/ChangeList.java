@@ -16,7 +16,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
 
-import jp.ac.osaka_u.ist.sdl.cheval.Vector;
+import jp.ac.osaka_u.ist.sdl.cheval.Change;
 import jp.ac.osaka_u.ist.sdl.cheval.gui.ObservedChanges;
 import jp.ac.osaka_u.ist.sdl.cheval.gui.ObservedChanges.CLABEL;
 
@@ -26,7 +26,7 @@ public class ChangeList extends JTable implements Observer {
 	static final int COLUMN_LENGTH_LABEL = 10;
 	static final int COLUMN_LENGTH_NEIGHBORS = 10;
 
-	final Vector[] changes;
+	final Change[] changes;
 
 	final public JScrollPane scrollPane;
 	final private OSelectionHandler selectionHandler;
@@ -43,7 +43,7 @@ public class ChangeList extends JTable implements Observer {
 			final int firstIndex = e.getFirstIndex();
 			final int lastIndex = e.getLastIndex();
 
-			final SortedSet<Vector> changes = new TreeSet<Vector>();
+			final SortedSet<Change> changes = new TreeSet<Change>();
 
 			for (int index = firstIndex; index <= lastIndex; index++) {
 
@@ -55,7 +55,7 @@ public class ChangeList extends JTable implements Observer {
 						.convertRowIndexToModel(index);
 				final ChangeListModel model = (ChangeListModel) ChangeList.this
 						.getModel();
-				final Vector change = model.changes[modelIndex];
+				final Change change = model.changes[modelIndex];
 				changes.add(change);
 			}
 
@@ -66,7 +66,7 @@ public class ChangeList extends JTable implements Observer {
 		}
 	}
 
-	public ChangeList(final Vector[] changes) {
+	public ChangeList(final Change[] changes) {
 
 		super();
 
@@ -89,7 +89,7 @@ public class ChangeList extends JTable implements Observer {
 				.addListSelectionListener(this.selectionHandler);
 	}
 
-	public void setModel(final Vector[] changes) {
+	public void setModel(final Change[] changes) {
 
 		final ChangeListModel model = new ChangeListModel(changes);
 		this.setModel(model);

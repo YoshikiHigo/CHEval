@@ -4,16 +4,16 @@ import java.util.SortedMap;
 
 import javax.swing.table.AbstractTableModel;
 
-import jp.ac.osaka_u.ist.sdl.cheval.Vector;
+import jp.ac.osaka_u.ist.sdl.cheval.Change;
 
 public class ChangeListModel extends AbstractTableModel {
 
 	static public final String[] TITLES = new String[] { "Change ID", "LABEL",
 			"NEIGHBORS" };
 
-	final public Vector[] changes;
+	final public Change[] changes;
 
-	public ChangeListModel(final Vector[] changes) {
+	public ChangeListModel(final Change[] changes) {
 		this.changes = changes;
 	}
 
@@ -40,7 +40,7 @@ public class ChangeListModel extends AbstractTableModel {
 			label.append(Long.toString(this.changes[row].afterMethodID));
 			return label.toString();
 		case 2:
-			final SortedMap<Vector, Double> neighbors = this.changes[row]
+			final SortedMap<Change, Double> neighbors = this.changes[row]
 					.getSimilarChanges();
 			return neighbors.size();
 		default:

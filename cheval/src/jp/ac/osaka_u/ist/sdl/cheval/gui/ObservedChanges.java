@@ -9,7 +9,7 @@ import java.util.Observer;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import jp.ac.osaka_u.ist.sdl.cheval.Vector;
+import jp.ac.osaka_u.ist.sdl.cheval.Change;
 
 public class ObservedChanges extends Observable {
 
@@ -19,7 +19,7 @@ public class ObservedChanges extends Observable {
 
 	private static final Map<CLABEL, ObservedChanges> INSTANCES = new HashMap<CLABEL, ObservedChanges>();
 
-	private final SortedSet<Vector> changes;
+	private final SortedSet<Change> changes;
 	public final CLABEL label;
 	private Observer source;
 
@@ -29,7 +29,7 @@ public class ObservedChanges extends Observable {
 			throw new NullPointerException();
 		}
 
-		this.changes = new TreeSet<Vector>();
+		this.changes = new TreeSet<Change>();
 		this.source = null;
 		this.label = label;
 	}
@@ -43,7 +43,7 @@ public class ObservedChanges extends Observable {
 		return instance;
 	}
 
-	public boolean add(final Vector change, final Observer source) {
+	public boolean add(final Change change, final Observer source) {
 
 		if (null == change) {
 			return false;
@@ -58,7 +58,7 @@ public class ObservedChanges extends Observable {
 		return true;
 	}
 
-	public boolean addAll(final Collection<Vector> change, final Observer source) {
+	public boolean addAll(final Collection<Change> change, final Observer source) {
 
 		if (null == changes) {
 			return false;
@@ -73,7 +73,7 @@ public class ObservedChanges extends Observable {
 		return true;
 	}
 
-	public boolean remove(final Vector change, final Observer source) {
+	public boolean remove(final Change change, final Observer source) {
 
 		if (null == change) {
 			return false;
@@ -88,7 +88,7 @@ public class ObservedChanges extends Observable {
 		return true;
 	}
 
-	public boolean removeAll(final Collection<Vector> changes,
+	public boolean removeAll(final Collection<Change> changes,
 			final Observer source) {
 
 		if (null == changes) {
@@ -104,7 +104,7 @@ public class ObservedChanges extends Observable {
 		return true;
 	}
 
-	public boolean set(final Vector change, final Observer source) {
+	public boolean set(final Change change, final Observer source) {
 
 		if (null == change) {
 			return false;
@@ -120,7 +120,7 @@ public class ObservedChanges extends Observable {
 		return true;
 	}
 
-	public boolean setAll(final Collection<Vector> changes,
+	public boolean setAll(final Collection<Change> changes,
 			final Observer source) {
 
 		if (null == changes) {
@@ -150,7 +150,7 @@ public class ObservedChanges extends Observable {
 		this.notifyObservers(source);
 	}
 
-	public SortedSet<Vector> get() {
+	public SortedSet<Change> get() {
 		return Collections.unmodifiableSortedSet(this.changes);
 	}
 

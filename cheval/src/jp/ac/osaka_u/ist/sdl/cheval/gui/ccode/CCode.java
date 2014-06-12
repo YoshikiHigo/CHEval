@@ -20,7 +20,7 @@ import javax.swing.text.Document;
 import javax.swing.text.Element;
 
 import jp.ac.osaka_u.ist.sdl.cheval.Method;
-import jp.ac.osaka_u.ist.sdl.cheval.Vector;
+import jp.ac.osaka_u.ist.sdl.cheval.Change;
 import jp.ac.osaka_u.ist.sdl.cheval.db.MethodRetriever;
 import jp.ac.osaka_u.ist.sdl.cheval.gui.ObservedChanges;
 import jp.ac.osaka_u.ist.sdl.cheval.gui.ObservedChanges.CLABEL;
@@ -133,7 +133,7 @@ public class CCode extends JTextArea implements Observer {
 
 						try {
 
-							final Vector change = observedChanges.get().first();
+							final Change change = observedChanges.get().first();
 							final long methodID = this.beforeafter == BEFOREAFTER.BEFORE ? change.beforeMethodID
 									: change.afterMethodID;
 
@@ -186,7 +186,7 @@ public class CCode extends JTextArea implements Observer {
 
 						try {
 
-							final Vector change = observedChanges.get().first();
+							final Change change = observedChanges.get().first();
 							final long methodID = this.beforeafter == BEFOREAFTER.BEFORE ? change.beforeMethodID
 									: change.afterMethodID;
 

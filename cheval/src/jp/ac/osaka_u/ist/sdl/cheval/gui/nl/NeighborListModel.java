@@ -4,18 +4,18 @@ import java.util.SortedMap;
 
 import javax.swing.table.AbstractTableModel;
 
-import jp.ac.osaka_u.ist.sdl.cheval.Vector;
+import jp.ac.osaka_u.ist.sdl.cheval.Change;
 
 public class NeighborListModel extends AbstractTableModel {
 
 	static public final String[] TITLES = new String[] { "Change ID", "LABEL",
 			"SIMILARITY" };
 
-	final public Vector[] changes;
-	final public SortedMap<Vector, Double> similarities;
+	final public Change[] changes;
+	final public SortedMap<Change, Double> similarities;
 
-	public NeighborListModel(final SortedMap<Vector, Double> similarChanges) {
-		this.changes = similarChanges.keySet().toArray(new Vector[] {});
+	public NeighborListModel(final SortedMap<Change, Double> similarChanges) {
+		this.changes = similarChanges.keySet().toArray(new Change[] {});
 		this.similarities = similarChanges;
 	}
 

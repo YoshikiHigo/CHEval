@@ -32,7 +32,7 @@ public class ChangeAssembler {
 		urlBuilder.append(database);
 		final String url = urlBuilder.toString();
 
-		final List<Vector> vectors = new ArrayList<Vector>();
+		final List<Change> vectors = new ArrayList<Change>();
 		try {
 			Class.forName("org.sqlite.JDBC");
 
@@ -41,7 +41,7 @@ public class ChangeAssembler {
 			final String query = makeSQL();
 			final ResultSet result = statement.executeQuery(query);
 			while (result.next()) {
-				final Vector vector = createVector(result);
+				final Change vector = createVector(result);
 				if (!isZero(vector)) {
 					vectors.add(vector);
 				}
@@ -174,7 +174,7 @@ public class ChangeAssembler {
 		return text.toString();
 	}
 
-	private static Vector createVector(ResultSet rs) throws SQLException {
+	private static Change createVector(ResultSet rs) throws SQLException {
 		int column = 0;
 		final long before_vector_ID = rs.getLong(++column);
 		final long after_vector_ID = rs.getLong(++column);
@@ -289,10 +289,10 @@ public class ChangeAssembler {
 				typeDeclarationStatement, typeLiteral, typeParameter,
 				variableDeclarationExpression, variableDeclarationFragment,
 				variableDeclarationStatement, whileStatement, wildcardType };
-		return new Vector(before_vector_ID, after_vector_ID, data);
+		return new Change(before_vector_ID, after_vector_ID, data);
 	}
 
-	private static boolean isZero(final Vector vector) {
+	private static boolean isZero(final Change vector) {
 		for (int element : vector.data) {
 			if (0 != element) {
 				return false;

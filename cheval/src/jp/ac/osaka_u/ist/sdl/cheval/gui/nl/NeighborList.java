@@ -18,7 +18,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
 
-import jp.ac.osaka_u.ist.sdl.cheval.Vector;
+import jp.ac.osaka_u.ist.sdl.cheval.Change;
 import jp.ac.osaka_u.ist.sdl.cheval.gui.ObservedChanges;
 import jp.ac.osaka_u.ist.sdl.cheval.gui.ObservedChanges.CLABEL;
 
@@ -43,7 +43,7 @@ public class NeighborList extends JTable implements Observer {
 			final int firstIndex = e.getFirstIndex();
 			final int lastIndex = e.getLastIndex();
 
-			final SortedSet<Vector> neighbors = new TreeSet<Vector>();
+			final SortedSet<Change> neighbors = new TreeSet<Change>();
 
 			for (int index = firstIndex; index <= lastIndex; index++) {
 
@@ -55,7 +55,7 @@ public class NeighborList extends JTable implements Observer {
 						.convertRowIndexToModel(index);
 				final NeighborListModel model = (NeighborListModel) NeighborList.this
 						.getModel();
-				final Vector change = model.changes[modelIndex];
+				final Change change = model.changes[modelIndex];
 				neighbors.add(change);
 			}
 
@@ -64,12 +64,12 @@ public class NeighborList extends JTable implements Observer {
 		}
 	}
 
-	public NeighborList(final Vector[] changes) {
+	public NeighborList(final Change[] changes) {
 
 		super();
 
 		this.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		this.setModel(new TreeMap<Vector, Double>());
+		this.setModel(new TreeMap<Change, Double>());
 
 		this.scrollPane = new JScrollPane();
 		this.scrollPane.setViewportView(this);
@@ -85,7 +85,7 @@ public class NeighborList extends JTable implements Observer {
 				.addListSelectionListener(this.selectionHandler);
 	}
 
-	public void setModel(final SortedMap<Vector, Double> changes) {
+	public void setModel(final SortedMap<Change, Double> changes) {
 
 		final NeighborListModel model = new NeighborListModel(changes);
 		this.setModel(model);
@@ -115,11 +115,11 @@ public class NeighborList extends JTable implements Observer {
 			final ObservedChanges changes = (ObservedChanges) o;
 			if (changes.label.equals(CLABEL.SELECTED)) {
 				if (changes.isSet()) {
-					final SortedMap<Vector, Double> similarChanges = changes
+					final SortedMap<Change, Double> similarChanges = changes
 							.get().first().getSimilarChanges();
 					this.setModel(similarChanges);
 				} else {
-					this.setModel(new TreeMap<Vector, Double>());
+					this.setModel(new TreeMap<Change, Double>());
 				}
 			}
 		}

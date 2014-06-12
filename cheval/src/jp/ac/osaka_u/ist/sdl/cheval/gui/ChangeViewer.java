@@ -16,8 +16,8 @@ import java.util.TreeMap;
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 
-import jp.ac.osaka_u.ist.sdl.cheval.Vector;
-import jp.ac.osaka_u.ist.sdl.cheval.VectorPair;
+import jp.ac.osaka_u.ist.sdl.cheval.Change;
+import jp.ac.osaka_u.ist.sdl.cheval.ChangePair;
 import jp.ac.osaka_u.ist.sdl.cheval.gui.ObservedChanges.CLABEL;
 import jp.ac.osaka_u.ist.sdl.cheval.gui.ccode.CCode;
 import jp.ac.osaka_u.ist.sdl.cheval.gui.ccode.CCode.BEFOREAFTER;
@@ -49,8 +49,8 @@ public class ChangeViewer extends JFrame {
 
 		this.repository = repository;
 		this.database = database;
-		final List<VectorPair> vectorPairs = readVectorPairs(file);
-		final Vector[] vectors = getVectorData(vectorPairs);
+		final List<ChangePair> vectorPairs = readVectorPairs(file);
+		final Change[] vectors = getVectorData(vectorPairs);
 
 		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setSize(new Dimension(d.width - 5, d.height - 27));
@@ -120,9 +120,9 @@ public class ChangeViewer extends JFrame {
 		bottomPanel.setDividerLocation(bottomPanel.getWidth() / 2);
 	}
 
-	private static List<VectorPair> readVectorPairs(final String path) {
+	private static List<ChangePair> readVectorPairs(final String path) {
 
-		final List<VectorPair> pairs = new ArrayList<VectorPair>();
+		final List<ChangePair> pairs = new ArrayList<ChangePair>();
 
 		try {
 			final BufferedReader reader = new BufferedReader(new FileReader(
@@ -137,9 +137,9 @@ public class ChangeViewer extends JFrame {
 				final String rightAfterID = tokenizer.nextToken();
 				final String similarity = tokenizer.nextToken();
 
-				final VectorPair pair = new VectorPair(new Vector(
+				final ChangePair pair = new ChangePair(new Change(
 						Long.parseLong(leftBeforeID),
-						Long.parseLong(leftAfterID), new int[] {}), new Vector(
+						Long.parseLong(leftAfterID), new int[] {}), new Change(
 						Long.parseLong(rightBeforeID),
 						Long.parseLong(rightAfterID), new int[] {}),
 						Double.parseDouble(similarity));
@@ -155,12 +155,12 @@ public class ChangeViewer extends JFrame {
 		return pairs;
 	}
 
-	private static Vector[] getVectorData(final List<VectorPair> pairs) {
+	private static Change[] getVectorData(final List<ChangePair> pairs) {
 
-		final SortedMap<Vector, Vector> vectorData = new TreeMap<Vector, Vector>();
+		final SortedMap<Change, Change> vectorData = new TreeMap<Change, Change>();
 		for (int i = 0; i < pairs.size(); i++) {
 
-			Vector vector = vectorData.get(pairs.get(i).left);
+			Change vector = vectorData.get(pairs.get(i).left);
 			if (null == vector) {
 				vector = pairs.get(i).left;
 				vectorData.put(vector, vector);
@@ -175,7 +175,7 @@ public class ChangeViewer extends JFrame {
 			vector.addSimilarChange(pairs.get(i).left, pairs.get(i).similarity);
 		}
 
-		return vectorData.keySet().toArray(new Vector[] {});
+		return vectorData.keySet().toArray(new Change[] {});
 	}
 
 	class ChangeViewerListener implements WindowListener {

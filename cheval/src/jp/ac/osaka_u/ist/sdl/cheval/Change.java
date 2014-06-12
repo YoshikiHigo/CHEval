@@ -5,7 +5,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Vector implements Comparable<Vector> {
+public class Change implements Comparable<Change> {
 
 	public static final int ANNOTATION_TYPE_DECLARATION = 0;
 	public static final int ANNOTATION_TYPE_MEMBER_DECLARATION = 1;
@@ -99,7 +99,7 @@ public class Vector implements Comparable<Vector> {
 	public final long afterMethodID;
 	public final int[] data;
 
-	private final SortedMap<Vector, Double> similarChanges;
+	private final SortedMap<Change, Double> similarChanges;
 
 	public static String toString(final int[] vector) {
 		final StringBuilder builder = new StringBuilder();
@@ -113,20 +113,20 @@ public class Vector implements Comparable<Vector> {
 		return builder.toString();
 	}
 
-	public Vector(final long beforeMethodID, final long afterMethodID,
+	public Change(final long beforeMethodID, final long afterMethodID,
 			final int[] data) {
 		this.id = IDGENERATOR.getAndIncrement();
 		this.beforeMethodID = beforeMethodID;
 		this.afterMethodID = afterMethodID;
 		this.data = data;
-		this.similarChanges = new TreeMap<Vector, Double>();
+		this.similarChanges = new TreeMap<Change, Double>();
 	}
 
-	public void addSimilarChange(final Vector change, final double similarity) {
+	public void addSimilarChange(final Change change, final double similarity) {
 		this.similarChanges.put(change, similarity);
 	}
 
-	public SortedMap<Vector, Double> getSimilarChanges() {
+	public SortedMap<Change, Double> getSimilarChanges() {
 		return Collections.unmodifiableSortedMap(this.similarChanges);
 	}
 
@@ -142,17 +142,17 @@ public class Vector implements Comparable<Vector> {
 			return false;
 		}
 
-		if (!(o instanceof Vector)) {
+		if (!(o instanceof Change)) {
 			return false;
 		}
 
-		final Vector target = (Vector) o;
+		final Change target = (Change) o;
 		return (this.beforeMethodID == target.beforeMethodID)
 				&& (this.afterMethodID == target.afterMethodID);
 	}
 
 	@Override
-	public int compareTo(final Vector v) {
+	public int compareTo(final Change v) {
 		if (this.beforeMethodID < v.beforeMethodID) {
 			return -1;
 		} else if (this.beforeMethodID > v.beforeMethodID) {
