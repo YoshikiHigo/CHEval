@@ -32,8 +32,12 @@ import org.tmatesoft.svn.core.wc.SVNWCClient;
 
 public class CCode extends JTextArea implements Observer {
 
-	public enum TYPE {
+	public enum BEFOREAFTER {
 		BEFORE, AFTER;
+	}
+
+	public enum TYPE {
+		SELECTED, NEIGHBORS;
 	}
 
 	static public final int TAB_SIZE = 4;
@@ -42,16 +46,19 @@ public class CCode extends JTextArea implements Observer {
 
 	private final String repository;
 	private final String database;
+	private final BEFOREAFTER beforeafter;
 	private final TYPE type;
 
 	private Method method;
 
-	public CCode(final String repository, final String database, final TYPE type) {
+	public CCode(final String repository, final String database,
+			final BEFOREAFTER beforeafter, final TYPE type) {
 
 		this.setTabSize(TAB_SIZE);
 
 		this.repository = repository;
 		this.database = database;
+		this.beforeafter = beforeafter;
 		this.type = type;
 		this.method = null;
 
@@ -114,52 +121,114 @@ public class CCode extends JTextArea implements Observer {
 	public void update(final Observable o, final Object arg) {
 
 		if (o instanceof ObservedChanges) {
-			final ObservedChanges observedChanges = (ObservedChanges) o;
-			if (observedChanges.label.equals(CLABEL.SELECTED)) {
 
-				this.setText("");
+			if (this.type == TYPE.SELECTED) {
 
-				if (observedChanges.isSet()) {
+				final ObservedChanges observedChanges = (ObservedChanges) o;
+				if (observedChanges.label.equals(CLABEL.SELECTED)) {
 
-					try {
+					this.setText("");
 
-						final Vector change = observedChanges.get().first();
-						final long methodID = this.type == TYPE.BEFORE ? change.beforeMethodID
-								: change.afterMethodID;
+					if (observedChanges.isSet()) {
 
-						final MethodRetriever retriever = MethodRetriever
-								.getInstance(this.database);
-						this.method = retriever.getMethod(methodID);
+						try {
 
-						final SVNURL fileurl = SVNURL.fromFile(new File(
-								this.repository + File.separator
-										+ this.method.path));
-						final SVNWCClient wcClient = SVNClientManager
-								.newInstance().getWCClient();
+							final Vector change = observedChanges.get().first();
+							final long methodID = this.beforeafter == BEFOREAFTER.BEFORE ? change.beforeMethodID
+									: change.afterMethodID;
 
-						final StringBuilder text = new StringBuilder();
-						wcClient.doGetFileContents(fileurl,
-								SVNRevision.create(this.method.endRevision),
-								SVNRevision.create(this.method.endRevision),
-								false, new OutputStream() {
-									@Override
-									public void write(int b) throws IOException {
-										text.append((char) b);
-									}
-								});
+							final MethodRetriever retriever = MethodRetriever
+									.getInstance(this.database);
+							this.method = retriever.getMethod(methodID);
 
-						final Insets margin = new Insets(5, 50, 5, 5);
-						this.setMargin(margin);
-						this.setUI(new CCodeUI(this.method.startLine,
-								this.method.endLine, this, margin));
-						this.setText(text.toString());
-						this.setTitle(this.method.path);
+							final SVNURL fileurl = SVNURL.fromFile(new File(
+									this.repository + File.separator
+											+ this.method.path));
+							final SVNWCClient wcClient = SVNClientManager
+									.newInstance().getWCClient();
 
-					} catch (final Exception e) {
-						e.printStackTrace();
+							final StringBuilder text = new StringBuilder();
+							wcClient.doGetFileContents(
+									fileurl,
+									SVNRevision.create(this.method.endRevision),
+									SVNRevision.create(this.method.endRevision),
+									false, new OutputStream() {
+										@Override
+										public void write(int b)
+												throws IOException {
+											text.append((char) b);
+										}
+									});
+
+							final Insets margin = new Insets(5, 50, 5, 5);
+							this.setMargin(margin);
+							this.setUI(new CCodeUI(this.method.startLine,
+									this.method.endLine, this, margin));
+							this.setText(text.toString());
+							this.setTitle(this.method.path);
+
+						} catch (final Exception e) {
+							e.printStackTrace();
+						}
+					} else {
+						this.method = null;
 					}
-				} else {
-					this.method = null;
+				}
+
+			} else if (this.type == TYPE.NEIGHBORS) {
+
+				final ObservedChanges observedChanges = (ObservedChanges) o;
+				if (observedChanges.label.equals(CLABEL.NEIGHBORS)) {
+
+					this.setText("");
+
+					if (observedChanges.isSet()) {
+
+						try {
+
+							final Vector change = observedChanges.get().first();
+							final long methodID = this.beforeafter == BEFOREAFTER.BEFORE ? change.beforeMethodID
+									: change.afterMethodID;
+
+							final MethodRetriever retriever = MethodRetriever
+									.getInstance(this.database);
+							this.method = retriever.getMethod(methodID);
+
+							final SVNURL fileurl = SVNURL.fromFile(new File(
+									this.repository + File.separator
+											+ this.method.path));
+							final SVNWCClient wcClient = SVNClientManager
+									.newInstance().getWCClient();
+
+							final StringBuilder text = new StringBuilder();
+							wcClient.doGetFileContents(
+									fileurl,
+									SVNRevision.create(this.method.endRevision),
+									SVNRevision.create(this.method.endRevision),
+									false, new OutputStream() {
+										@Override
+										public void write(int b)
+												throws IOException {
+											text.append((char) b);
+										}
+									});
+
+							final Insets margin = new Insets(5, 50, 5, 5);
+							this.setMargin(margin);
+							this.setUI(new CCodeUI(this.method.startLine,
+									this.method.endLine, this, margin));
+							this.setText(text.toString());
+							this.setTitle(this.method.path);
+
+						} catch (final Exception e) {
+							e.printStackTrace();
+						}
+					} else {
+						this.method = null;
+					}
+
+				} else if (observedChanges.label.equals(CLABEL.SELECTED)) {
+					this.setText("");
 				}
 			}
 		}

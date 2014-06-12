@@ -20,6 +20,7 @@ import jp.ac.osaka_u.ist.sdl.cheval.Vector;
 import jp.ac.osaka_u.ist.sdl.cheval.VectorPair;
 import jp.ac.osaka_u.ist.sdl.cheval.gui.ObservedChanges.CLABEL;
 import jp.ac.osaka_u.ist.sdl.cheval.gui.ccode.CCode;
+import jp.ac.osaka_u.ist.sdl.cheval.gui.ccode.CCode.BEFOREAFTER;
 import jp.ac.osaka_u.ist.sdl.cheval.gui.ccode.CCode.TYPE;
 import jp.ac.osaka_u.ist.sdl.cheval.gui.cl.ChangeList;
 import jp.ac.osaka_u.ist.sdl.cheval.gui.nl.NeighborList;
@@ -70,14 +71,14 @@ public class ChangeViewer extends JFrame {
 		this.getContentPane().add(leftPanel, BorderLayout.WEST);
 
 		final CCode beforeChangeCode = new CCode(repository, database,
-				TYPE.BEFORE);
+				BEFOREAFTER.BEFORE, TYPE.SELECTED);
 		ObservedChanges.getInstance(CLABEL.SELECTED).addObserver(
 				beforeChangeCode);
 		ObservedChanges.getInstance(CLABEL.NEIGHBORS).addObserver(
 				beforeChangeCode);
 
 		final CCode afterChangeCode = new CCode(repository, database,
-				TYPE.AFTER);
+				BEFOREAFTER.AFTER, TYPE.SELECTED);
 		ObservedChanges.getInstance(CLABEL.SELECTED).addObserver(
 				afterChangeCode);
 		ObservedChanges.getInstance(CLABEL.NEIGHBORS).addObserver(
@@ -87,14 +88,36 @@ public class ChangeViewer extends JFrame {
 		topPanel.add(beforeChangeCode.scrollPane, JSplitPane.LEFT);
 		topPanel.add(afterChangeCode.scrollPane, JSplitPane.RIGHT);
 
+		final CCode beforeChangeCode2 = new CCode(repository, database,
+				BEFOREAFTER.BEFORE, TYPE.NEIGHBORS);
+		ObservedChanges.getInstance(CLABEL.SELECTED).addObserver(
+				beforeChangeCode2);
+		ObservedChanges.getInstance(CLABEL.NEIGHBORS).addObserver(
+				beforeChangeCode2);
+
+		final CCode afterChangeCode2 = new CCode(repository, database,
+				BEFOREAFTER.AFTER, TYPE.NEIGHBORS);
+		ObservedChanges.getInstance(CLABEL.SELECTED).addObserver(
+				afterChangeCode2);
+		ObservedChanges.getInstance(CLABEL.NEIGHBORS).addObserver(
+				afterChangeCode2);
+
+		final JSplitPane bottomPanel = new JSplitPane(
+				JSplitPane.HORIZONTAL_SPLIT);
+		bottomPanel.add(beforeChangeCode2.scrollPane, JSplitPane.LEFT);
+		bottomPanel.add(afterChangeCode2.scrollPane, JSplitPane.RIGHT);
+
 		final JSplitPane mainPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		mainPanel.add(topPanel, JSplitPane.TOP);
+		mainPanel.add(bottomPanel, JSplitPane.BOTTOM);
 
 		this.getContentPane().add(mainPanel, BorderLayout.CENTER);
 
 		this.setVisible(true);
 
 		leftPanel.setDividerLocation(d.height / 2);
+		topPanel.setDividerLocation(topPanel.getWidth() / 2);
+		bottomPanel.setDividerLocation(bottomPanel.getWidth() / 2);
 	}
 
 	private static List<VectorPair> readVectorPairs(final String path) {

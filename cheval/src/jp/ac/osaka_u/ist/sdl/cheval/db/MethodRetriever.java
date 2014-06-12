@@ -43,8 +43,8 @@ public class MethodRetriever {
 		this.connector = DriverManager.getConnection(url.toString());
 
 		final StringBuilder text = new StringBuilder();
-		text.append("select START_REVISION_ID, ");
-		text.append("END_REVISION_ID, ");
+		text.append("select (select r1.revision_num from REVISION r1 where r1.revision_id = m.start_revision_id), ");
+		text.append("(select r2.revision_num from REVISION r2 where r2.revision_id = m.end_revision_id), ");
 		text.append("(select f.file_path from FILE f where f.file_id = m.owner_file_id), ");
 		text.append("m.START_LINE, ");
 		text.append("m.END_LINE from Method m where m.method_id=?");
