@@ -14,6 +14,7 @@ import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
 import jp.ac.osaka_u.ist.sdl.cheval.Change;
@@ -22,6 +23,7 @@ import jp.ac.osaka_u.ist.sdl.cheval.gui.ObservedChanges.CLABEL;
 import jp.ac.osaka_u.ist.sdl.cheval.gui.ccode.CCode;
 import jp.ac.osaka_u.ist.sdl.cheval.gui.ccode.CCode.BEFOREAFTER;
 import jp.ac.osaka_u.ist.sdl.cheval.gui.ccode.CCode.TYPE;
+import jp.ac.osaka_u.ist.sdl.cheval.gui.ccode.ChangeTextField;
 import jp.ac.osaka_u.ist.sdl.cheval.gui.cl.ChangeList;
 import jp.ac.osaka_u.ist.sdl.cheval.gui.nl.NeighborList;
 
@@ -88,6 +90,17 @@ public class ChangeViewer extends JFrame {
 		topPanel.add(beforeChangeCode.scrollPane, JSplitPane.LEFT);
 		topPanel.add(afterChangeCode.scrollPane, JSplitPane.RIGHT);
 
+		final ChangeTextField selectedChangeText = new ChangeTextField(
+				this.database, ChangeTextField.TYPE.SELECTED);
+		ObservedChanges.getInstance(CLABEL.SELECTED).addObserver(
+				selectedChangeText);
+		ObservedChanges.getInstance(CLABEL.NEIGHBORS).addObserver(
+				selectedChangeText);
+
+		final JPanel topPanel2 = new JPanel(new BorderLayout());
+		topPanel2.add(topPanel, BorderLayout.CENTER);
+		topPanel2.add(selectedChangeText, BorderLayout.NORTH);
+
 		final CCode beforeChangeCode2 = new CCode(repository, database,
 				BEFOREAFTER.BEFORE, TYPE.NEIGHBORS);
 		ObservedChanges.getInstance(CLABEL.SELECTED).addObserver(
@@ -108,7 +121,7 @@ public class ChangeViewer extends JFrame {
 		bottomPanel.add(afterChangeCode2.scrollPane, JSplitPane.RIGHT);
 
 		final JSplitPane mainPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		mainPanel.add(topPanel, JSplitPane.TOP);
+		mainPanel.add(topPanel2, JSplitPane.TOP);
 		mainPanel.add(bottomPanel, JSplitPane.BOTTOM);
 
 		this.getContentPane().add(mainPanel, BorderLayout.CENTER);
@@ -136,12 +149,14 @@ public class ChangeViewer extends JFrame {
 				final String rightBeforeID = tokenizer.nextToken();
 				final String rightAfterID = tokenizer.nextToken();
 				final String similarity = tokenizer.nextToken();
+				final String leftText = tokenizer.nextToken();
+				final String rightText = tokenizer.nextToken();
 
 				final ChangePair pair = new ChangePair(new Change(
 						Long.parseLong(leftBeforeID),
-						Long.parseLong(leftAfterID), new int[] {}), new Change(
+						Long.parseLong(leftAfterID), leftText), new Change(
 						Long.parseLong(rightBeforeID),
-						Long.parseLong(rightAfterID), new int[] {}),
+						Long.parseLong(rightAfterID), rightText),
 						Double.parseDouble(similarity));
 				pairs.add(pair);
 			}

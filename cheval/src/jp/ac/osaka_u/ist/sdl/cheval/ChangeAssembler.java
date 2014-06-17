@@ -70,6 +70,10 @@ public class ChangeAssembler {
 						writer.write(Long.toString(vectors.get(j).afterMethodID));
 						writer.write(", ");
 						writer.write(Double.toString(similarity));
+						writer.write(", ");
+						writer.write(vectors.get(i).getChangedValueString());
+						writer.write(", ");
+						writer.write(vectors.get(j).getChangedValueString());
 						writer.newLine();
 					}
 				}

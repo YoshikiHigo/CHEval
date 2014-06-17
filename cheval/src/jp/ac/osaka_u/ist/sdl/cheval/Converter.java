@@ -48,12 +48,14 @@ public class Converter {
 				final String rightBeforeID = tokenizer.nextToken();
 				final String rightAfterID = tokenizer.nextToken();
 				final String similarity = tokenizer.nextToken();
+				final String leftText = tokenizer.nextToken();
+				final String rightText = tokenizer.nextToken();
 
 				final ChangePair pair = new ChangePair(new Change(
 						Long.parseLong(leftBeforeID),
-						Long.parseLong(leftAfterID), new int[] {}), new Change(
+						Long.parseLong(leftAfterID), leftText), new Change(
 						Long.parseLong(rightBeforeID),
-						Long.parseLong(rightAfterID), new int[] {}),
+						Long.parseLong(rightAfterID), rightText),
 						Double.parseDouble(similarity));
 				pairs.add(pair);
 			}
