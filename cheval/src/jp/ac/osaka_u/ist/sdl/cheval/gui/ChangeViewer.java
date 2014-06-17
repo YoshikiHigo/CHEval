@@ -121,7 +121,7 @@ public class ChangeViewer extends JFrame {
 		bottomPanel.add(afterChangeCode2.scrollPane, JSplitPane.RIGHT);
 
 		final ChangeTextField neighborChangeText = new ChangeTextField(
-				this.database, ChangeTextField.TYPE.SELECTED);
+				this.database, ChangeTextField.TYPE.NEIGHBORS);
 		ObservedChanges.getInstance(CLABEL.SELECTED).addObserver(
 				neighborChangeText);
 		ObservedChanges.getInstance(CLABEL.NEIGHBORS).addObserver(
