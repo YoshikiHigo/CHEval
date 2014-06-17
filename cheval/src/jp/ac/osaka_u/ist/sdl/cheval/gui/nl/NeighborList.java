@@ -68,7 +68,7 @@ public class NeighborList extends JTable implements Observer {
 
 		super();
 
-		this.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.setModel(new TreeMap<Change, Double>());
 
 		this.scrollPane = new JScrollPane();

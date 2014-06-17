@@ -120,9 +120,20 @@ public class ChangeViewer extends JFrame {
 		bottomPanel.add(beforeChangeCode2.scrollPane, JSplitPane.LEFT);
 		bottomPanel.add(afterChangeCode2.scrollPane, JSplitPane.RIGHT);
 
+		final ChangeTextField neighborChangeText = new ChangeTextField(
+				this.database, ChangeTextField.TYPE.SELECTED);
+		ObservedChanges.getInstance(CLABEL.SELECTED).addObserver(
+				neighborChangeText);
+		ObservedChanges.getInstance(CLABEL.NEIGHBORS).addObserver(
+				neighborChangeText);
+
+		final JPanel bottomPanel2 = new JPanel(new BorderLayout());
+		bottomPanel2.add(bottomPanel, BorderLayout.CENTER);
+		bottomPanel2.add(neighborChangeText, BorderLayout.NORTH);
+
 		final JSplitPane mainPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		mainPanel.add(topPanel2, JSplitPane.TOP);
-		mainPanel.add(bottomPanel, JSplitPane.BOTTOM);
+		mainPanel.add(bottomPanel2, JSplitPane.BOTTOM);
 
 		this.getContentPane().add(mainPanel, BorderLayout.CENTER);
 
@@ -131,6 +142,7 @@ public class ChangeViewer extends JFrame {
 		leftPanel.setDividerLocation(d.height / 2);
 		topPanel.setDividerLocation(topPanel.getWidth() / 2);
 		bottomPanel.setDividerLocation(bottomPanel.getWidth() / 2);
+		mainPanel.setDividerLocation(mainPanel.getHeight() / 2);
 	}
 
 	private static List<ChangePair> readVectorPairs(final String path) {

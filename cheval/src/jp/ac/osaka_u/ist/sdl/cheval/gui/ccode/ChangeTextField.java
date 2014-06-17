@@ -24,8 +24,7 @@ public class ChangeTextField extends JTextField implements Observer {
 	public ChangeTextField(final String database, final TYPE type) {
 		this.database = database;
 		this.type = type;
-		this.setEnabled(true);
-		this.setEditable(true);
+		this.setEditable(false);
 
 		this.setBorder(new TitledBorder(new LineBorder(Color.black),
 				"Change Contents"));
@@ -50,10 +49,6 @@ public class ChangeTextField extends JTextField implements Observer {
 								.getChangedValueString();
 						this.setText(changeText);
 					}
-				}
-
-				else if (observedChanges.label.equals(CLABEL.NEIGHBORS)) {
-					this.setText("");
 				}
 			}
 
